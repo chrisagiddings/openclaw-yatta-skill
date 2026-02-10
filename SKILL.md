@@ -47,7 +47,7 @@ Interact with Yatta! task management system via API. Requires an API key from yo
 4. **Batch operations affect multiple items** - Be extra careful with batch updates
 5. **Real-time sync** - Changes appear in Yatta! UI immediately
 
-For detailed API operation documentation, see [API-REFERENCE.md](API-REFERENCE.md) (coming soon).
+For detailed API operation documentation, see [API-REFERENCE.md](API-REFERENCE.md).
 
 ## Setup
 
