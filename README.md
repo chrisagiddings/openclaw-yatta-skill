@@ -24,11 +24,15 @@ This skill enables OpenClaw agents to interact with [Yatta!](https://yattadone.c
 
 ## Installation
 
-### Via ClawdHub (Recommended)
+### Via ClawdHub (Recommended) ✅
 
 ```bash
 clawdhub install yatta
 ```
+
+**Published:** February 10, 2026  
+**Version:** 0.1.0  
+**Status:** Production-ready
 
 ### Manual Installation
 
