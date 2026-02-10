@@ -2,12 +2,52 @@
 name: yatta
 description: Manage Yatta! tasks, projects, contexts, and productivity tracking via API
 homepage: https://github.com/chrisagiddings/openclaw-yatta-skill
-metadata: {"openclaw":{"emoji":"✅","requires":{"bins":["curl","jq"]},"disable-model-invocation":true,"credentials":{"type":"env","variables":[{"name":"YATTA_API_KEY","description":"Yatta! API key (yatta_...)","required":true},{"name":"YATTA_API_URL","description":"Yatta! API base URL","required":false,"default":"https://zunahvofybvxpptjkwxk.supabase.co/functions/v1"}]}}}
+metadata: {"openclaw":{"emoji":"✅","requires":{"bins":["curl","jq"]},"disable-model-invocation":true,"capabilities":["task-management","project-management","context-management","comment-management","calendar-management","destructive-operations"],"credentials":{"type":"env","variables":[{"name":"YATTA_API_KEY","description":"Yatta! API key (yatta_...)","required":true},{"name":"YATTA_API_URL","description":"Yatta! API base URL","required":false,"default":"https://zunahvofybvxpptjkwxk.supabase.co/functions/v1"}]}}}
 ---
 
 # Yatta! Skill
 
 Interact with Yatta! task management system via API. Requires an API key from your Yatta! account.
+
+## ⚠️ Security Warning
+
+**This skill can perform DESTRUCTIVE operations on your Yatta! account:**
+
+- **Task Management:** Create, update, archive, and batch-modify tasks
+- **Project Management:** Create, update, and archive projects
+- **Context Management:** Create contexts and assign them to tasks
+- **Comment Management:** Add, update, and delete task comments
+- **Calendar Management:** Create, sync, and modify calendar subscriptions
+- **Follow-Up Management:** Update delegation schedules and mark complete
+- **Capacity Management:** Trigger capacity computations
+
+**Operation Types:**
+
+**Read-Only Operations** (✅ Safe):
+- List tasks, projects, contexts, comments
+- Get analytics, insights, streaks
+- View capacity and calendar data
+- Get Eisenhower Matrix view
+- All GET requests
+
+**Destructive Operations** (⚠️ Modify or delete data):
+- Create/update/archive tasks (POST, PUT, DELETE)
+- Batch update tasks
+- Create/update projects
+- Create/assign contexts
+- Add/update/delete comments
+- Add/sync calendar subscriptions
+- Update follow-up schedules
+- All POST, PUT, DELETE requests
+
+**Best Practices:**
+1. **Review commands before running** - Check what the API call will do
+2. **No undo for deletions** - Archived tasks can be recovered, but some operations are permanent
+3. **Test on non-critical data first** - Create test tasks/projects to verify behavior
+4. **Batch operations affect multiple items** - Be extra careful with batch updates
+5. **Real-time sync** - Changes appear in Yatta! UI immediately
+
+For detailed API operation documentation, see [API-REFERENCE.md](API-REFERENCE.md) (coming soon).
 
 ## Setup
 
