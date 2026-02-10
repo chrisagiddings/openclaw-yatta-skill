@@ -2,7 +2,7 @@
 name: yatta
 description: Manage Yatta! tasks, projects, contexts, and productivity tracking via API
 homepage: https://github.com/chrisagiddings/openclaw-yatta-skill
-metadata: {"openclaw":{"emoji":"✅","requires":{"bins":["curl","jq"]}}}
+metadata: {"openclaw":{"emoji":"✅","requires":{"bins":["curl","jq"]},"disable-model-invocation":true}}
 ---
 
 # Yatta! Skill
