@@ -6,7 +6,7 @@
 
 ## Overview
 
-This skill enables OpenClaw agents to interact with [Yatta!](https://yatta.app), a time-aware task management system. Manage tasks, track delegation, monitor capacity, and get productivity insights—all via API.
+This skill enables OpenClaw agents to interact with [Yatta!](https://yattadone.com), a time-aware task management system. Manage tasks, track delegation, monitor capacity, and get productivity insights—all via API.
 
 ## Features
 
@@ -49,7 +49,7 @@ cp -r . ~/.local/share/mise/installs/node/*/lib/node_modules/clawdbot/skills/yat
 2. **Configure environment variables:**
    ```bash
    export YATTA_API_KEY="yatta_your_key_here"
-   export YATTA_API_URL="https://api.yatta.app"  # Default
+   export YATTA_API_URL="https://yattadone.com/api"  # Default
    ```
 
 3. **Test the connection:**
@@ -199,8 +199,8 @@ MIT License - see [LICENSE](./LICENSE) for details
 
 ## Links
 
-- **Yatta! App:** https://yatta.app
-- **Yatta! API Docs:** https://docs.yatta.app/api
+- **Yatta! App:** https://yattadone.com
+- **Yatta! API Docs:** https://yattadone.com/docs/api
 - **ClawdHub:** https://clawdhub.com
 - **OpenClaw (Clawdbot):** https://github.com/clawdbot/clawdbot
 

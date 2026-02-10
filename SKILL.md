@@ -22,8 +22,8 @@ Interact with Yatta! task management system via API. Requires an API key from yo
    # Set your API key (use 1password or env var)
    export YATTA_API_KEY="yatta_your_key_here"
    
-   # Set your Yatta! API base URL (if self-hosted)
-   export YATTA_API_URL="https://api.yatta.app"  # Default
+   # Set your Yatta! API base URL
+   export YATTA_API_URL="https://yattadone.com/api"  # Default
    ```
 
 3. **Test connection:**
@@ -686,6 +686,6 @@ fi
 
 ## Resources
 
-- **API Documentation:** [Yatta! API Docs](https://docs.yatta.app/api)
+- **API Documentation:** [Yatta! API Docs](https://yattadone.com/docs/api)
 - **GitHub Repo:** https://github.com/chrisagiddings/openclaw-yatta-skill
 - **Report Issues:** https://github.com/chrisagiddings/openclaw-yatta-skill/issues
