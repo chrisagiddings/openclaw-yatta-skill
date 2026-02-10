@@ -23,8 +23,10 @@ Interact with Yatta! task management system via API. Requires an API key from yo
    export YATTA_API_KEY="yatta_your_key_here"
    
    # Set your Yatta! API base URL
-   export YATTA_API_URL="https://yattadone.com/api"  # Default
+   export YATTA_API_URL="https://zunahvofybvxpptjkwxk.supabase.co/functions/v1"  # Default
    ```
+   
+   **Note:** Currently using direct Supabase URL. Clean branded URLs (yattadone.com/api) coming soon.
 
 3. **Test connection:**
    ```bash
@@ -686,6 +688,15 @@ fi
 
 ## Resources
 
-- **API Documentation:** [Yatta! API Docs](https://yattadone.com/docs/api)
+- **API Documentation:** [Yatta! API Docs](https://yattadone.com/docs/api) (coming soon)
 - **GitHub Repo:** https://github.com/chrisagiddings/openclaw-yatta-skill
 - **Report Issues:** https://github.com/chrisagiddings/openclaw-yatta-skill/issues
+
+## API URL Note
+
+Currently using the direct Supabase Edge Functions URL for reliability:
+```
+https://zunahvofybvxpptjkwxk.supabase.co/functions/v1
+```
+
+Branded URLs (`yattadone.com/api`) will be available in a future release once proxy configuration is resolved with the hosting provider.

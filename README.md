@@ -49,8 +49,10 @@ cp -r . ~/.local/share/mise/installs/node/*/lib/node_modules/clawdbot/skills/yat
 2. **Configure environment variables:**
    ```bash
    export YATTA_API_KEY="yatta_your_key_here"
-   export YATTA_API_URL="https://yattadone.com/api"  # Default
+   export YATTA_API_URL="https://zunahvofybvxpptjkwxk.supabase.co/functions/v1"  # Default
    ```
+   
+   > **Note:** Currently using direct Supabase URL for reliability. Branded URLs coming in future release.
 
 3. **Test the connection:**
    ```bash
