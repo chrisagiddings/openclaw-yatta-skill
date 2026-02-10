@@ -8,6 +8,9 @@
 
 This skill enables OpenClaw agents to interact with [Yatta!](https://yattadone.com), a time-aware task management system. Manage tasks, track delegation, monitor capacity, and get productivity insights—all via API.
 
+**Status:** ✅ **Tested and Verified** (Feb 10, 2026)  
+**Real-time Sync:** ✅ API changes appear in UI immediately
+
 ## Features
 
 ✅ **Full Task Management** - Create, update, complete, and archive tasks  
