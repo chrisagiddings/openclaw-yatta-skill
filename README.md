@@ -22,6 +22,25 @@ This skill enables OpenClaw agents to interact with [Yatta!](https://yattadone.c
 ✅ **Analytics** - Get productivity insights, velocity metrics, and streaks  
 ✅ **Matrix View** - Eisenhower Matrix (do-first, schedule, delegate, eliminate)
 
+## Security
+
+**This skill includes comprehensive security controls:**
+
+- **🔒 Autonomous invocation disabled** - Requires explicit user commands
+- **📋 Capability declarations** - Clear documentation of destructive operations
+- **🔑 Credential documentation** - API key requirements and security best practices
+- **📚 Operation classification** - 24 read-only, 12 destructive operations documented
+- **⚠️ Security warnings** - Prominent warnings about data-modifying operations
+- **📖 Comprehensive docs** - [API-REFERENCE.md](API-REFERENCE.md) with side effects, undo procedures
+
+**API Key Access:**
+- Your Yatta! API key provides full account access
+- Store securely (1Password CLI, environment variables)
+- Rotate regularly (every 90 days recommended)
+- Never commit keys to version control
+
+See [SKILL.md](SKILL.md) for detailed security information and [API-REFERENCE.md](API-REFERENCE.md) for operation-by-operation documentation.
+
 ## Installation
 
 ### Via ClawdHub (Recommended) ✅
@@ -129,6 +148,8 @@ curl -s "$YATTA_API_URL/capacity/today" \
 - [x] **Matrix API** - Eisenhower Matrix view ✅
 
 **Status:** 100% API coverage verified (Feb 10, 2026)
+
+**Documentation:** 36 operations documented (24 read-only, 12 destructive) - see [API-REFERENCE.md](API-REFERENCE.md)
 
 ### Future Enhancements 🚧
 
