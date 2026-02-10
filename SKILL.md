@@ -2,7 +2,7 @@
 name: yatta
 description: Manage Yatta! tasks, projects, contexts, and productivity tracking via API
 homepage: https://github.com/chrisagiddings/openclaw-yatta-skill
-metadata: {"openclaw":{"emoji":"✅","requires":{"bins":["curl","jq"]},"disable-model-invocation":true}}
+metadata: {"openclaw":{"emoji":"✅","requires":{"bins":["curl","jq"]},"disable-model-invocation":true,"credentials":{"type":"env","variables":[{"name":"YATTA_API_KEY","description":"Yatta! API key (yatta_...)","required":true},{"name":"YATTA_API_URL","description":"Yatta! API base URL","required":false,"default":"https://zunahvofybvxpptjkwxk.supabase.co/functions/v1"}]}}}
 ---
 
 # Yatta! Skill
@@ -11,24 +11,53 @@ Interact with Yatta! task management system via API. Requires an API key from yo
 
 ## Setup
 
-1. **Get your API key:**
-   - Log into Yatta! app
-   - Go to Settings → API Keys
-   - Create new key (e.g., "OpenClaw Integration")
-   - Copy the `yatta_...` key
+### ⚠️ API Key Security
 
-2. **Configure the skill:**
-   ```bash
-   # Set your API key (use 1password or env var)
-   export YATTA_API_KEY="yatta_your_key_here"
-   
-   # Set your Yatta! API base URL
-   export YATTA_API_URL="https://zunahvofybvxpptjkwxk.supabase.co/functions/v1"  # Default
-   ```
-   
-   **Note:** Currently using direct Supabase URL. Clean branded URLs (yattadone.com/api) coming soon.
+**Your Yatta! API key provides FULL access to your account:**
+- Can create, read, update, and delete ALL tasks, projects, contexts
+- Can modify calendar subscriptions and follow-up schedules
+- Can archive data and trigger computations
+- **No read-only scopes available** - keys have full permissions
 
-3. **Test connection:**
+**Security Best Practices:**
+- Store keys in a secure password manager (1Password CLI recommended)
+- Use environment variables, never hardcode keys in scripts
+- Rotate keys regularly (every 90 days recommended)
+- Create separate keys for different integrations
+- Revoke unused keys immediately
+- **Never commit keys to version control**
+
+### 1. Get Your API Key
+
+1. Log into Yatta! app
+2. Go to Settings → API Keys
+3. Create new key (e.g., "OpenClaw Integration")
+4. Copy the `yatta_...` key
+5. Store it securely
+
+### 2. Configure the Skill
+
+**Option A: Environment Variables (Recommended)**
+```bash
+# Add to your shell profile (~/.zshrc, ~/.bashrc)
+export YATTA_API_KEY="yatta_your_key_here"
+export YATTA_API_URL="https://zunahvofybvxpptjkwxk.supabase.co/functions/v1"  # Default
+```
+
+**Option B: 1Password CLI (Most Secure)**
+```bash
+# Store key in 1Password
+op item create --category=API_CREDENTIAL \
+  --title="Yatta API Key" \
+  api_key[password]="yatta_your_key_here"
+
+# Use in commands
+export YATTA_API_KEY=$(op read "op://Private/Yatta API Key/api_key")
+```
+
+**Note:** Currently using direct Supabase URL. Clean branded URLs (yattadone.com/api) coming soon.
+
+### 3. Test Connection
    ```bash
    curl -s "$YATTA_API_URL/tasks" \
      -H "Authorization: Bearer $YATTA_API_KEY" \
