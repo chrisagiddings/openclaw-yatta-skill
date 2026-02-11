@@ -1,6 +1,6 @@
 ---
 name: yatta
-description: Manage Yatta! tasks, projects, contexts, and productivity tracking via API
+description: Personal productivity system for task and capacity management. Create and organize tasks with rich attributes (priority, effort, complexity, tags), track time and streaks, manage capacity across projects and contexts, view Eisenhower Matrix prioritization, sync calendar subscriptions, handle delegation and follow-ups, and get AI-powered insights. Supports batch operations, multi-project workflows, and real-time capacity planning to prevent overcommitment.
 homepage: https://github.com/chrisagiddings/openclaw-yatta-skill
 metadata: {"openclaw":{"emoji":"✅","requires":{"env":["YATTA_API_KEY","YATTA_API_URL"],"bins":["curl","jq"]},"primaryEnv":"YATTA_API_KEY","disable-model-invocation":true,"capabilities":["task-management","project-management","context-management","comment-management","calendar-management","destructive-operations"],"credentials":{"type":"env","variables":[{"name":"YATTA_API_KEY","description":"Yatta! API key (yatta_...)","required":true},{"name":"YATTA_API_URL","description":"Yatta! API base URL","required":false,"default":"https://zunahvofybvxpptjkwxk.supabase.co/functions/v1"}]}}}
 ---
