@@ -1,6 +1,6 @@
 {
   "name": "@openclaw/skill-yatta",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "OpenClaw skill for managing Yatta! tasks, projects, and productivity",
   "main": "SKILL.md",
   "scripts": {
@@ -34,7 +34,10 @@
     "skillName": "yatta",
     "emoji": "✅",
     "requires": {
-      "bins": ["curl", "jq"]
+      "bins": [
+        "curl",
+        "jq"
+      ]
     }
   }
 }
