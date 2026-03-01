@@ -5,6 +5,39 @@ All notable changes to the Yatta! OpenClaw skill will be documented in this file
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.1] - 2026-02-28
+
+### Fixed
+
+#### ClawHub Registry Metadata (Issue #18)
+
+**Added top-level `disable-model-invocation` field:**
+- ClawHub registry was showing `disable-model-invocation: false` despite being set in metadata JSON
+- Added top-level YAML field to SKILL.md frontmatter (same pattern as other BENIGN-rated skills)
+- Ensures registry correctly reflects manual-only invocation policy
+
+**Declared optional verification tools:**
+- Added `anyBins: ["openssl", "dig"]` to requirements
+- These tools are used by `scripts/verify-endpoint.sh` but are optional
+- Skill works without them (verification script gracefully skips missing checks)
+
+### Changed
+
+**Updated description to document security fixes:**
+- Added security notice: "v0.2.0 eliminates RCE vulnerability from v0.1.3"
+- Documents shell/JSON injection fix, endpoint verification, safe patterns
+- Similar to how Tide Watch documents CVE-2026-001 fix
+
+### Security
+
+**VirusTotal Rating:** ✅ **BENIGN**
+
+> "The OpenClaw Yatta! skill (v0.2.0) is classified as benign. The developers have demonstrated a strong commitment to security by explicitly documenting and fixing critical shell and JSON injection vulnerabilities (RCE risk) present in previous versions."
+
+**ClawHub Rating:** Expected BENIGN after metadata fix
+
+---
+
 ## [0.2.0] - 2026-02-28
 
 ### 🔒 Security Fixes (CRITICAL)
