@@ -95,7 +95,51 @@ op item create --category=API_CREDENTIAL \
 export YATTA_API_KEY=$(op read "op://Private/Yatta API Key/api_key")
 ```
 
-**Note:** Currently using direct Supabase URL. Clean branded URLs (yattadone.com/api) coming soon.
+### ⚠️ API Endpoint Verification
+
+**The default API endpoint is hosted on Supabase:**
+
+- **Default URL:** `https://zunahvofybvxpptjkwxk.supabase.co/functions/v1`
+- **Project:** Yatta! production backend
+- **Owner:** Chris Giddings (chris@chrisgiddings.net)
+- **App:** https://yattadone.com
+
+**Why Supabase?**
+- Yatta! uses Supabase as its backend infrastructure
+- The URL is a direct Supabase project endpoint
+- Branded URL (api.yattadone.com) is on the roadmap
+
+**Verification steps:**
+
+1. **Verify app ownership:**
+   - Visit https://yattadone.com
+   - Check Settings → About or footer for API endpoint confirmation
+   
+2. **Check SSL certificate:**
+   ```bash
+   openssl s_client -connect zunahvofybvxpptjkwxk.supabase.co:443 \
+     -servername zunahvofybvxpptjkwxk.supabase.co < /dev/null 2>&1 \
+     | openssl x509 -noout -subject -issuer
+   ```
+
+3. **Run verification script:**
+   ```bash
+   # Automated endpoint verification
+   bash scripts/verify-endpoint.sh
+   ```
+
+4. **Contact support if uncertain:**
+   - Email: support@yattadone.com
+   - Only send API keys to verified endpoints
+
+**Branded URL (Coming Soon):**
+- Future: `https://api.yattadone.com/v1`
+- Current Supabase URL will continue to work
+- Skill will auto-update default when branded URL is live
+
+**Security note:**
+Only send your API key to endpoints you trust and have verified.
+If you prefer to wait for the branded API URL, that's a valid security choice.
 
 ### 3. Test Connection
    ```bash
