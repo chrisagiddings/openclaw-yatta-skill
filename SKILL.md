@@ -193,6 +193,77 @@ yatta_create_task "Finish report" "high"
 - Ready-to-use examples
 - Zero boilerplate
 
+---
+
+## 🎯 Invocation Policy
+
+**This skill requires MANUAL invocation only.**
+
+### Policy Details
+
+**Setting:** `disable-model-invocation: true`
+
+**What this means:**
+- Agent will **NOT** automatically invoke Yatta! operations
+- **User must explicitly request** each action
+- No background task creation or modification
+- All operations require clear user intent
+
+### Why Manual-Only?
+
+**Security rationale:**
+
+1. **Full account access:** Yatta! API keys grant complete account access
+2. **No read-only scopes:** No way to limit API key permissions
+3. **Destructive operations:** Can delete/archive/modify data permanently
+4. **User oversight required:** Changes should be reviewed before execution
+
+### Examples
+
+**❌ Autonomous (NOT allowed):**
+```
+User: "I should probably archive old tasks"
+Agent: *silently archives tasks without confirmation*
+```
+
+**✅ Manual (Required):**
+```
+User: "Please archive tasks older than 30 days"
+Agent: *executes explicit request, shows results*
+```
+
+### Policy Enforcement
+
+**How it works:**
+1. Skill metadata declares `disable-model-invocation: true`
+2. OpenClaw respects this setting
+3. Agent requires explicit user commands
+4. No autonomous background operations
+
+**Verification:**
+```bash
+# Check package.json
+jq '.openclaw["disable-model-invocation"]' package.json
+# Should output: true
+
+# Check SKILL.md frontmatter
+grep "disable-model-invocation" SKILL.md
+# Should show: "disable-model-invocation":true
+```
+
+### If You See Unexpected Operations
+
+**If Yatta! operations happen without your explicit request:**
+
+1. **Stop immediately** - This indicates a policy violation
+2. **Revoke API key** - Create new key in Yatta! Settings → API Keys
+3. **File issue** - https://github.com/chrisagiddings/openclaw-yatta-skill/issues
+4. **Report to OpenClaw** - Policy enforcement bug
+
+**This should never happen** - manual invocation is a security requirement.
+
+---
+
 ## Tasks API
 
 ### List Tasks

@@ -33,6 +33,7 @@
   "openclaw": {
     "skillName": "yatta",
     "emoji": "✅",
+    "disable-model-invocation": true,
     "requires": {
       "bins": [
         "curl",
