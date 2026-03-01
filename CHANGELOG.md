@@ -5,6 +5,42 @@ All notable changes to the Yatta! OpenClaw skill will be documented in this file
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.2] - 2026-02-28
+
+### Fixed
+
+#### ClawHub Registry Metadata Sync (Issue #19)
+
+**Problem:** ClawHub registry reads `package.json`, not SKILL.md metadata JSON.
+
+**Scanner reported:**
+- "Required env vars: none" (incorrect)
+- "Primary credential: none" (incorrect)
+- SKILL.md declared YATTA_API_KEY as required, but registry didn't show it
+
+**Root cause:** `package.json` openclaw section was missing:
+- `requires.env` (credential requirements)
+- `requires.anyBins` (optional verification tools)
+- `primaryEnv` (primary credential declaration)
+
+**Fix applied:** Synced `package.json` with SKILL.md metadata
+
+**Now includes:**
+```json
+"openclaw": {
+  "requires": {
+    "bins": ["curl", "jq"],
+    "env": ["YATTA_API_KEY", "YATTA_API_URL"],  // ← Added
+    "anyBins": ["openssl", "dig"]                // ← Added
+  },
+  "primaryEnv": "YATTA_API_KEY"                  // ← Added
+}
+```
+
+**Expected result:** ClawHub registry correctly displays credential requirements
+
+---
+
 ## [0.2.1] - 2026-02-28
 
 ### Fixed

@@ -1,6 +1,6 @@
 {
   "name": "@openclaw/skill-yatta",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "OpenClaw skill for managing Yatta! tasks, projects, and productivity",
   "main": "SKILL.md",
   "scripts": {
@@ -38,7 +38,16 @@
       "bins": [
         "curl",
         "jq"
+      ],
+      "env": [
+        "YATTA_API_KEY",
+        "YATTA_API_URL"
+      ],
+      "anyBins": [
+        "openssl",
+        "dig"
       ]
-    }
+    },
+    "primaryEnv": "YATTA_API_KEY"
   }
 }
