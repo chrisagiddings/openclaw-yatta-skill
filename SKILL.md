@@ -104,6 +104,51 @@ export YATTA_API_KEY=$(op read "op://Private/Yatta API Key/api_key")
      | jq '.[:3]'  # Show first 3 tasks
    ```
 
+## 🔒 Security: Input Validation
+
+**⚠️ CRITICAL: This skill is vulnerable to shell and JSON injection if user input is not properly sanitized.**
+
+### Safe Coding Patterns (Required)
+
+**ALL examples in this skill use safe patterns:**
+- ✅ **JSON payloads:** Built with `jq -n --arg` (prevents JSON injection)
+- ✅ **URL parameters:** Encoded with `jq -sRr @uri` (prevents shell injection)  
+- ✅ **No direct string interpolation** in JSON or URLs
+
+### Quick Reference
+
+```bash
+# ✅ SAFE: JSON construction
+PAYLOAD=$(jq -n --arg title "$TITLE" '{title: $title}')
+curl -d "$PAYLOAD" ...
+
+# ✅ SAFE: URL encoding
+TASK_ID_ENCODED=$(printf %s "$TASK_ID" | jq -sRr @uri)
+curl "$API_URL/tasks/$TASK_ID_ENCODED" ...
+
+# ✅ BEST: Use wrapper functions
+source scripts/yatta-safe-api.sh
+yatta_create_task "Finish report" "high"
+```
+
+### Why This Matters
+
+**Unsafe patterns can lead to:**
+- API key exfiltration
+- Arbitrary command execution (RCE)
+- Data manipulation and corruption
+
+**See [SECURITY.md](SECURITY.md) for:**
+- Detailed vulnerability examples
+- Attack scenarios and impact
+- Safe coding patterns
+- Testing guidelines
+
+**See [scripts/yatta-safe-api.sh](scripts/yatta-safe-api.sh) for:**
+- Pre-built safe wrapper functions
+- Ready-to-use examples
+- Zero boilerplate
+
 ## Tasks API
 
 ### List Tasks
@@ -148,8 +193,9 @@ PROJECT_ID=$(curl -s "$YATTA_API_URL/projects" \
   -H "Authorization: Bearer $YATTA_API_KEY" \
   | jq -r '.[] | select(.name=="Website Redesign") | .id')
 
-# Get tasks for that project
-curl -s "$YATTA_API_URL/tasks?project_id=$PROJECT_ID" \
+# Get tasks for that project (URL-encode query parameter)
+PROJECT_ID_ENCODED=$(printf %s "$PROJECT_ID" | jq -sRr @uri)
+curl -s "$YATTA_API_URL/tasks?project_id=$PROJECT_ID_ENCODED" \
   -H "Authorization: Bearer $YATTA_API_KEY" \
   | jq '.'
 ```
@@ -272,15 +318,18 @@ curl -s "$YATTA_API_URL/tasks" \
 
 **Update single task:**
 ```bash
+# ✅ SAFE: Use jq to build JSON payload
 TASK_ID="uuid-of-task"
+PAYLOAD=$(jq -n \
+  --arg id "$TASK_ID" \
+  --arg status "done" \
+  --arg completed_at "$(date -u +"%Y-%m-%dT%H:%M:%SZ")" \
+  '{id: $id, status: $status, completed_at: $completed_at}')
+
 curl -s -X PUT "$YATTA_API_URL/tasks" \
   -H "Authorization: Bearer $YATTA_API_KEY" \
   -H "Content-Type: application/json" \
-  -d '{
-    "id": "'$TASK_ID'",
-    "status": "done",
-    "completed_at": "'$(date -u +"%Y-%m-%dT%H:%M:%SZ")'"
-  }' \
+  -d "$PAYLOAD" \
   | jq '.'
 ```
 
@@ -300,13 +349,14 @@ curl -s -X PUT "$YATTA_API_URL/tasks" \
 ### Archive Task
 
 ```bash
+# ✅ SAFE: Use jq to build JSON payload
 TASK_ID="uuid-of-task"
+PAYLOAD=$(jq -n --arg id "$TASK_ID" '{id: $id}')
+
 curl -s -X DELETE "$YATTA_API_URL/tasks" \
   -H "Authorization: Bearer $YATTA_API_KEY" \
   -H "Content-Type: application/json" \
-  -d '{
-    "id": "'$TASK_ID'"
-  }' \
+  -d "$PAYLOAD" \
   | jq '.'
 ```
 
@@ -344,23 +394,29 @@ curl -s "$YATTA_API_URL/projects" \
 ### Update Project
 
 ```bash
+# ✅ SAFE: Use jq to build JSON payload
 PROJECT_ID="uuid-of-project"
+PAYLOAD=$(jq -n \
+  --arg id "$PROJECT_ID" \
+  --arg name "Website Redesign v2" \
+  --argjson archived false \
+  '{id: $id, name: $name, archived: $archived}')
+
 curl -s -X PUT "$YATTA_API_URL/projects" \
   -H "Authorization: Bearer $YATTA_API_KEY" \
   -H "Content-Type: application/json" \
-  -d '{
-    "id": "'$PROJECT_ID'",
-    "name": "Website Redesign v2",
-    "archived": false
-  }' \
+  -d "$PAYLOAD" \
   | jq '.'
 ```
 
 ### Get Project Tasks
 
 ```bash
+# ✅ SAFE: URL-encode path parameter
 PROJECT_ID="uuid-of-project"
-curl -s "$YATTA_API_URL/projects/$PROJECT_ID/tasks" \
+PROJECT_ID_ENCODED=$(printf %s "$PROJECT_ID" | jq -sRr @uri)
+
+curl -s "$YATTA_API_URL/projects/$PROJECT_ID_ENCODED/tasks" \
   -H "Authorization: Bearer $YATTA_API_KEY" \
   | jq '.'
 ```
@@ -398,24 +454,30 @@ curl -s "$YATTA_API_URL/contexts" \
 ### Assign Context to Task
 
 ```bash
+# ✅ SAFE: Use jq to build JSON payload with arrays
 TASK_ID="uuid-of-task"
 CONTEXT_ID="uuid-of-context"
+
+PAYLOAD=$(jq -n \
+  --arg task_id "$TASK_ID" \
+  --arg context_id "$CONTEXT_ID" \
+  '{task_id: $task_id, context_ids: [$context_id]}')
 
 curl -s -X POST "$YATTA_API_URL/contexts/assign" \
   -H "Authorization: Bearer $YATTA_API_KEY" \
   -H "Content-Type: application/json" \
-  -d '{
-    "task_id": "'$TASK_ID'",
-    "context_ids": ["'$CONTEXT_ID'"]
-  }' \
+  -d "$PAYLOAD" \
   | jq '.'
 ```
 
 ### Get Task Contexts
 
 ```bash
+# ✅ SAFE: URL-encode path parameter
 TASK_ID="uuid-of-task"
-curl -s "$YATTA_API_URL/tasks/$TASK_ID/contexts" \
+TASK_ID_ENCODED=$(printf %s "$TASK_ID" | jq -sRr @uri)
+
+curl -s "$YATTA_API_URL/tasks/$TASK_ID_ENCODED/contexts" \
   -H "Authorization: Bearer $YATTA_API_KEY" \
   | jq '.'
 ```
@@ -423,8 +485,11 @@ curl -s "$YATTA_API_URL/tasks/$TASK_ID/contexts" \
 ### Get Context Tasks
 
 ```bash
+# ✅ SAFE: URL-encode path parameter
 CONTEXT_ID="uuid-of-context"
-curl -s "$YATTA_API_URL/contexts/$CONTEXT_ID/tasks" \
+CONTEXT_ID_ENCODED=$(printf %s "$CONTEXT_ID" | jq -sRr @uri)
+
+curl -s "$YATTA_API_URL/contexts/$CONTEXT_ID_ENCODED/tasks" \
   -H "Authorization: Bearer $YATTA_API_KEY" \
   | jq '.'
 ```
@@ -434,8 +499,11 @@ curl -s "$YATTA_API_URL/contexts/$CONTEXT_ID/tasks" \
 ### List Task Comments
 
 ```bash
+# ✅ SAFE: URL-encode path parameter
 TASK_ID="uuid-of-task"
-curl -s "$YATTA_API_URL/tasks/$TASK_ID/comments" \
+TASK_ID_ENCODED=$(printf %s "$TASK_ID" | jq -sRr @uri)
+
+curl -s "$YATTA_API_URL/tasks/$TASK_ID_ENCODED/comments" \
   -H "Authorization: Bearer $YATTA_API_KEY" \
   | jq '.'
 ```
@@ -443,40 +511,48 @@ curl -s "$YATTA_API_URL/tasks/$TASK_ID/comments" \
 ### Add Comment
 
 ```bash
+# ✅ SAFE: URL-encode path + jq for JSON
 TASK_ID="uuid-of-task"
-curl -s -X POST "$YATTA_API_URL/tasks/$TASK_ID/comments" \
+TASK_ID_ENCODED=$(printf %s "$TASK_ID" | jq -sRr @uri)
+PAYLOAD=$(jq -n \
+  --arg content "Waiting on client feedback before proceeding" \
+  '{content: $content}')
+
+curl -s -X POST "$YATTA_API_URL/tasks/$TASK_ID_ENCODED/comments" \
   -H "Authorization: Bearer $YATTA_API_KEY" \
   -H "Content-Type: application/json" \
-  -d '{
-    "content": "Waiting on client feedback before proceeding"
-  }' \
+  -d "$PAYLOAD" \
   | jq '.'
 ```
 
 ### Update Comment
 
 ```bash
+# ✅ SAFE: Use jq to build JSON payload
 COMMENT_ID="uuid-of-comment"
+PAYLOAD=$(jq -n \
+  --arg id "$COMMENT_ID" \
+  --arg content "Client responded, moving forward" \
+  '{id: $id, content: $content}')
+
 curl -s -X PUT "$YATTA_API_URL/task-comments" \
   -H "Authorization: Bearer $YATTA_API_KEY" \
   -H "Content-Type: application/json" \
-  -d '{
-    "id": "'$COMMENT_ID'",
-    "content": "Client responded, moving forward"
-  }' \
+  -d "$PAYLOAD" \
   | jq '.'
 ```
 
 ### Delete Comment
 
 ```bash
+# ✅ SAFE: Use jq to build JSON payload
 COMMENT_ID="uuid-of-comment"
+PAYLOAD=$(jq -n --arg id "$COMMENT_ID" '{id: $id}')
+
 curl -s -X DELETE "$YATTA_API_URL/task-comments" \
   -H "Authorization: Bearer $YATTA_API_KEY" \
   -H "Content-Type: application/json" \
-  -d '{
-    "id": "'$COMMENT_ID'"
-  }' \
+  -d "$PAYLOAD" \
   | jq '.'
 ```
 
@@ -502,8 +578,11 @@ curl -s "$YATTA_API_URL/follow-ups?date=$DATE" \
 ### Mark Follow-Up Complete
 
 ```bash
+# ✅ SAFE: URL-encode path parameter
 TASK_ID="uuid-of-task"
-curl -s -X POST "$YATTA_API_URL/tasks/$TASK_ID/follow-up" \
+TASK_ID_ENCODED=$(printf %s "$TASK_ID" | jq -sRr @uri)
+
+curl -s -X POST "$YATTA_API_URL/tasks/$TASK_ID_ENCODED/follow-up" \
   -H "Authorization: Bearer $YATTA_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{}' \
@@ -513,15 +592,20 @@ curl -s -X POST "$YATTA_API_URL/tasks/$TASK_ID/follow-up" \
 ### Update Follow-Up Schedule
 
 ```bash
+# ✅ SAFE: URL-encode path + jq for JSON
 TASK_ID="uuid-of-task"
-curl -s -X PUT "$YATTA_API_URL/tasks/$TASK_ID/follow-up-schedule" \
+TASK_ID_ENCODED=$(printf %s "$TASK_ID" | jq -sRr @uri)
+
+PAYLOAD=$(jq -n \
+  --arg type "every_n_days" \
+  --argjson interval 3 \
+  --arg next_follow_up "2026-02-12" \
+  '{type: $type, interval: $interval, next_follow_up: $next_follow_up}')
+
+curl -s -X PUT "$YATTA_API_URL/tasks/$TASK_ID_ENCODED/follow-up-schedule" \
   -H "Authorization: Bearer $YATTA_API_KEY" \
   -H "Content-Type: application/json" \
-  -d '{
-    "type": "every_n_days",
-    "interval": 3,
-    "next_follow_up": "2026-02-12"
-  }' \
+  -d "$PAYLOAD" \
   | jq '.'
 ```
 
@@ -552,8 +636,11 @@ curl -s -X POST "$YATTA_API_URL/calendar/subscriptions" \
 ### Trigger Calendar Sync
 
 ```bash
+# ✅ SAFE: URL-encode path parameter
 SUBSCRIPTION_ID="uuid-of-subscription"
-curl -s -X POST "$YATTA_API_URL/calendar/subscriptions/$SUBSCRIPTION_ID/sync" \
+SUBSCRIPTION_ID_ENCODED=$(printf %s "$SUBSCRIPTION_ID" | jq -sRr @uri)
+
+curl -s -X POST "$YATTA_API_URL/calendar/subscriptions/$SUBSCRIPTION_ID_ENCODED/sync" \
   -H "Authorization: Bearer $YATTA_API_KEY" \
   | jq '.'
 ```
